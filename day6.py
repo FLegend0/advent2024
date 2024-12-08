@@ -59,6 +59,37 @@ def traverse_path(lab, currpos):
         lab[currpos[0]][currpos[1]] = newtile
     return False
 
+def check_wall_hit_loop(lab, currpos, direction):
+    move = [0, 0]
+    currpos = currpos.copy()
+    if direction == '^':
+        move[0] -= 1
+    elif direction == '>':
+        move[1] += 1
+    elif direction == 'v':
+        move[0] += 1
+    elif direction == '<':
+        move[1] -= 1
+
+    stopped = False
+    while not stopped:
+        currpos[0] += move[0]
+        currpos[1] += move[1]
+        if currpos[0] < 0 or currpos[0] >= len(lab):
+            stopped = True
+            break
+        if currpos[1] < 0 or currpos[1] >= len(lab[0]):
+            stopped = True
+            break
+
+        if lab[currpos[0]][currpos[1]][0] == '#':
+            stopped = True
+            prevtile = lab[currpos[0]-move[0]][currpos[1]-move[1]]
+            tempdir = rotate(direction)
+            if tempdir in prevtile:
+                global looppaths
+                looppaths += 1
+
 def traverse_path_part2(lab, currpos):
     tile = lab[currpos[0]][currpos[1]][0]
     direction = is_guard(tile)
@@ -82,6 +113,8 @@ def traverse_path_part2(lab, currpos):
         if temptile in lab[currpos[0]][currpos[1]]:
             global looppaths
             looppaths += 1
+        else:
+            check_wall_hit_loop(lab, currpos, temptile)
 
         if '.' in lab[newpos[0]][newpos[1]]:
             lab[newpos[0]][newpos[1]].remove('.')
@@ -138,4 +171,5 @@ for i in f:
 
 while not traverse_path_part2(lab, guardpos):
     pass
+print(lab)
 print(looppaths)
