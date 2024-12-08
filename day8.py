@@ -20,10 +20,13 @@ for i in f:
 
 
 for key in antennamap:
+    # PART 2 ONLY
     if len(antennamap[key]) > 1:
         for i in antennamap[key]:
             if i not in unique_locations:
                 unique_locations.append(i)
+
+    
     for i in range(0, len(antennamap[key])):
         for j in range(i+1, len(antennamap[key])):
             ant1 = antennamap[key][i]
